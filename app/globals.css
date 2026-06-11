@@ -170,4 +170,23 @@ body {
   background-color: transparent !important;
 }
 
+/* Card layout improvements */
+.card-container {
+  overflow: hidden !important;
+}
+
+.card-header {
+  background-color: #F9FAFB !important;
+  padding: 16px 20px !important;
+}
+
+.dark .card-header {
+  background-color: #243447 !important;
+}
+
+.card-content {
+  padding: 20px !important;
+}
+
+
 

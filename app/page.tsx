@@ -747,146 +747,148 @@ function DashboardContent() {
         {/* Main Grid: Bar Charts */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Course classification Horizontal Bar Chart */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">이수구분별 강좌 수</h3>
               </div>
-
             </div>
 
-            <div className="w-full h-[240px]">
-              {mounted && categories.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={categories}
-                    layout="vertical"
-                    margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563EB" />
-                        <stop offset="100%" stopColor="#1A4FA0" />
-                      </linearGradient>
-                      <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FCD34D" />
-                        <stop offset="100%" stopColor="#F5B700" />
-                      </linearGradient>
-                    </defs>
-                    <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#1A1A2E"
-                      fontSize={11}
-                      fontWeight={600}
-                      tickLine={false}
-                      axisLine={false}
-                      width={70}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
-                      contentStyle={{
-                        backgroundColor: "#1A1A2E",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                      }}
-                      itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                      labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
-                      formatter={(value) => [`${value}개`, "강좌 수"]}
-                    />
-                    <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>
-                      {categories.map((entry, index) => {
-                        const isMax = entry.count === maxCount;
-                        return (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
-                          />
-                        );
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
-                  차트를 불러오는 중...
-                </div>
-              )}
+            <div className="card-content">
+              <div className="w-full h-[240px]">
+                {mounted && categories.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={categories}
+                      layout="vertical"
+                      margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
+                    >
+                      <defs>
+                        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#2563EB" />
+                          <stop offset="100%" stopColor="#1A4FA0" />
+                        </linearGradient>
+                        <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FCD34D" />
+                          <stop offset="100%" stopColor="#F5B700" />
+                        </linearGradient>
+                      </defs>
+                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis
+                        dataKey="name"
+                        type="category"
+                        stroke="#1A1A2E"
+                        fontSize={11}
+                        fontWeight={600}
+                        tickLine={false}
+                        axisLine={false}
+                        width={70}
+                      />
+                      <Tooltip
+                        cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
+                        contentStyle={{
+                          backgroundColor: "#1A1A2E",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                        }}
+                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                        labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
+                        formatter={(value) => [`${value}개`, "강좌 수"]}
+                      />
+                      <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={16}>
+                        {categories.map((entry, index) => {
+                          const isMax = entry.count === maxCount;
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
+                            />
+                          );
+                        })}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
+                    차트를 불러오는 중...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Average Enrollment Horizontal Bar Chart */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">이수구분별 평균 수강인원</h3>
               </div>
-
             </div>
 
-            <div className="w-full h-[240px]">
-              {mounted && categories.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={categories}
-                    layout="vertical"
-                    margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563EB" />
-                        <stop offset="100%" stopColor="#1A4FA0" />
-                      </linearGradient>
-                      <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FCD34D" />
-                        <stop offset="100%" stopColor="#F5B700" />
-                      </linearGradient>
-                    </defs>
-                    <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#1A1A2E"
-                      fontSize={11}
-                      fontWeight={600}
-                      tickLine={false}
-                      axisLine={false}
-                      width={70}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
-                      contentStyle={{
-                        backgroundColor: "#1A1A2E",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                      }}
-                      itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                      labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
-                      formatter={(value) => [`${value}명`, "평균 수강인원"]}
-                    />
-                    <Bar dataKey="avgStudents" radius={[0, 4, 4, 0]} barSize={16}>
-                      {categories.map((entry, index) => {
-                        const isMax = entry.avgStudents === maxAvgStudents;
-                        return (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
-                          />
-                        );
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
-                  차트를 불러오는 중...
-                </div>
-              )}
+            <div className="card-content">
+              <div className="w-full h-[240px]">
+                {mounted && categories.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={categories}
+                      layout="vertical"
+                      margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
+                    >
+                      <defs>
+                        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#2563EB" />
+                          <stop offset="100%" stopColor="#1A4FA0" />
+                        </linearGradient>
+                        <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FCD34D" />
+                          <stop offset="100%" stopColor="#F5B700" />
+                        </linearGradient>
+                      </defs>
+                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis
+                        dataKey="name"
+                        type="category"
+                        stroke="#1A1A2E"
+                        fontSize={11}
+                        fontWeight={600}
+                        tickLine={false}
+                        axisLine={false}
+                        width={70}
+                      />
+                      <Tooltip
+                        cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
+                        contentStyle={{
+                          backgroundColor: "#1A1A2E",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                        }}
+                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                        labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
+                        formatter={(value) => [`${value}명`, "평균 수강인원"]}
+                      />
+                      <Bar dataKey="avgStudents" radius={[0, 4, 4, 0]} barSize={16}>
+                        {categories.map((entry, index) => {
+                          const isMax = entry.avgStudents === maxAvgStudents;
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
+                            />
+                          );
+                        })}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
+                    차트를 불러오는 중...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -894,150 +896,152 @@ function DashboardContent() {
         {/* Row 3 Grid: Donut Charts (2 columns) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Donut Chart 1: Class Method */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">수업방법 유형 분포</h3>
               </div>
-
             </div>
 
-            <div className="relative w-full h-[200px] flex items-center justify-center">
-              {mounted && methods.length > 0 ? (
-                <>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={methods}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={55}
-                        outerRadius={80}
-                        paddingAngle={2}
-                        dataKey="value"
-                      >
-                        {methods.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#1A1A2E",
-                          border: "none",
-                          borderRadius: "8px",
-                          padding: "6px 10px",
-                        }}
-                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                        formatter={(value) => [`${value}개`, "강좌 수"]}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+            <div className="card-content flex flex-col gap-4">
+              <div className="relative w-full h-[200px] flex items-center justify-center">
+                {mounted && methods.length > 0 ? (
+                  <>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={methods}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={55}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {methods.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "#1A1A2E",
+                            border: "none",
+                            borderRadius: "8px",
+                            padding: "6px 10px",
+                          }}
+                          itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                          formatter={(value) => [`${value}개`, "강좌 수"]}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
 
-                  {/* Donut Center text */}
-                  <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">TOTAL</span>
-                    <span className="text-xl font-bold text-[#1A1A2E]">
-                      {loading ? "..." : formatNumber(stats.totalCourses)}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <div className="text-xs text-[#6B7280]">도넛 차트를 불러오는 중...</div>
-              )}
-            </div>
-
-            {/* Custom Legends */}
-            <div className="flex flex-col gap-2 mt-2">
-              {methods.map((item, index) => {
-                const percentage = stats.totalCourses > 0 ? Math.round((item.value / stats.totalCourses) * 1000) / 10 : 0;
-                return (
-                  <div key={item.name} className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }}
-                      ></span>
-                      <span className="font-semibold text-[#1A1A2E]">{item.name}</span>
+                    {/* Donut Center text */}
+                    <div className="absolute flex flex-col items-center justify-center">
+                      <span className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">TOTAL</span>
+                      <span className="text-xl font-bold text-[#1A1A2E]">
+                        {loading ? "..." : formatNumber(stats.totalCourses)}
+                      </span>
                     </div>
-                    <span className="font-semibold text-[#6B7280]">{item.value}개 ({percentage}%)</span>
-                  </div>
-                );
-              })}
+                  </>
+                ) : (
+                  <div className="text-xs text-[#6B7280]">도넛 차트를 불러오는 중...</div>
+                )}
+              </div>
+
+              {/* Custom Legends */}
+              <div className="flex flex-col gap-2 mt-2">
+                {methods.map((item, index) => {
+                  const percentage = stats.totalCourses > 0 ? Math.round((item.value / stats.totalCourses) * 1000) / 10 : 0;
+                  return (
+                    <div key={item.name} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }}
+                        ></span>
+                        <span className="font-semibold text-[#1A1A2E]">{item.name}</span>
+                      </div>
+                      <span className="font-semibold text-[#6B7280]">{item.value}개 ({percentage}%)</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
 
           {/* Donut Chart 2: Credits Composition */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">학점 구성 비율</h3>
               </div>
-
             </div>
 
-            <div className="relative w-full h-[200px] flex items-center justify-center">
-              {mounted && credits.length > 0 ? (
-                <>
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={credits}
-                        cx="50%"
-                        cy="50%"
-                        innerRadius={55}
-                        outerRadius={80}
-                        paddingAngle={2}
-                        dataKey="value"
-                      >
-                        {credits.map((entry, index) => (
-                          <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
-                        ))}
-                      </Pie>
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "#1A1A2E",
-                          border: "none",
-                          borderRadius: "8px",
-                          padding: "6px 10px",
-                        }}
-                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                        formatter={(value) => [`${value}개`, "강좌 수"]}
-                      />
-                    </PieChart>
-                  </ResponsiveContainer>
+            <div className="card-content flex flex-col gap-4">
+              <div className="relative w-full h-[200px] flex items-center justify-center">
+                {mounted && credits.length > 0 ? (
+                  <>
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={credits}
+                          cx="50%"
+                          cy="50%"
+                          innerRadius={55}
+                          outerRadius={80}
+                          paddingAngle={2}
+                          dataKey="value"
+                        >
+                          {credits.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
+                          ))}
+                        </Pie>
+                        <Tooltip
+                          contentStyle={{
+                            backgroundColor: "#1A1A2E",
+                            border: "none",
+                            borderRadius: "8px",
+                            padding: "6px 10px",
+                          }}
+                          itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                          formatter={(value) => [`${value}개`, "강좌 수"]}
+                        />
+                      </PieChart>
+                    </ResponsiveContainer>
 
-                  {/* Donut Center text */}
-                  <div className="absolute flex flex-col items-center justify-center">
-                    <span className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">COURSES</span>
-                    <span className="text-xl font-bold text-[#1A1A2E]">
-                      {loading ? "..." : formatNumber(stats.totalCourses)}
-                    </span>
-                  </div>
-                </>
-              ) : (
-                <div className="text-xs text-[#6B7280]">도넛 차트를 불러오는 중...</div>
-              )}
-            </div>
-
-            {/* Custom Legends */}
-            <div className="flex flex-col gap-2 mt-2">
-              {credits.map((item, index) => {
-                const percentage = stats.totalCourses > 0 ? Math.round((item.value / stats.totalCourses) * 1000) / 10 : 0;
-                return (
-                  <div key={item.name} className="flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span
-                        className="w-2.5 h-2.5 rounded-full"
-                        style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }}
-                      ></span>
-                      <span className="font-semibold text-[#1A1A2E]">{item.name}</span>
+                    {/* Donut Center text */}
+                    <div className="absolute flex flex-col items-center justify-center">
+                      <span className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">COURSES</span>
+                      <span className="text-xl font-bold text-[#1A1A2E]">
+                        {loading ? "..." : formatNumber(stats.totalCourses)}
+                      </span>
                     </div>
-                    <span className="font-semibold text-[#6B7280]">{item.value}개 ({percentage}%)</span>
-                  </div>
-                );
-              })}
+                  </>
+                ) : (
+                  <div className="text-xs text-[#6B7280]">도넛 차트를 불러오는 중...</div>
+                )}
+              </div>
+
+              {/* Custom Legends */}
+              <div className="flex flex-col gap-2 mt-2">
+                {credits.map((item, index) => {
+                  const percentage = stats.totalCourses > 0 ? Math.round((item.value / stats.totalCourses) * 1000) / 10 : 0;
+                  return (
+                    <div key={item.name} className="flex items-center justify-between text-xs">
+                      <div className="flex items-center gap-2">
+                        <span
+                          className="w-2.5 h-2.5 rounded-full"
+                          style={{ backgroundColor: DONUT_COLORS[index % DONUT_COLORS.length] }}
+                        ></span>
+                        <span className="font-semibold text-[#1A1A2E]">{item.name}</span>
+                      </div>
+                      <span className="font-semibold text-[#6B7280]">{item.value}개 ({percentage}%)</span>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
@@ -1045,215 +1049,218 @@ function DashboardContent() {
         {/* Row 4 Grid: Day of Week Chart (1/2 width) & Class Time Chart (1/2 width) */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Day of Week Chart Card */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">요일별 수업 강좌 수</h3>
               </div>
-
             </div>
 
-            <div className="w-full h-[220px]">
-              {mounted && days.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={days}
-                    layout="vertical"
-                    margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563EB" />
-                        <stop offset="100%" stopColor="#1A4FA0" />
-                      </linearGradient>
-                      <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FCD34D" />
-                        <stop offset="100%" stopColor="#F5B700" />
-                      </linearGradient>
-                    </defs>
-                    <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#1A1A2E"
-                      fontSize={11}
-                      fontWeight={600}
-                      tickLine={false}
-                      axisLine={false}
-                      width={30}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
-                      contentStyle={{
-                        backgroundColor: "#1A1A2E",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                      }}
-                      itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                      labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
-                      formatter={(value) => [`${value}개`, "강좌 수"]}
-                    />
-                    <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={14}>
-                      {days.map((entry, index) => {
-                        const isMax = entry.count === maxDayCount;
-                        return (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
-                          />
-                        );
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
-                  차트를 불러오는 중...
-                </div>
-              )}
+            <div className="card-content">
+              <div className="w-full h-[220px]">
+                {mounted && days.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={days}
+                      layout="vertical"
+                      margin={{ top: 10, right: 20, left: 0, bottom: 5 }}
+                    >
+                      <defs>
+                        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#2563EB" />
+                          <stop offset="100%" stopColor="#1A4FA0" />
+                        </linearGradient>
+                        <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FCD34D" />
+                          <stop offset="100%" stopColor="#F5B700" />
+                        </linearGradient>
+                      </defs>
+                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis
+                        dataKey="name"
+                        type="category"
+                        stroke="#1A1A2E"
+                        fontSize={11}
+                        fontWeight={600}
+                        tickLine={false}
+                        axisLine={false}
+                        width={30}
+                      />
+                      <Tooltip
+                        cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
+                        contentStyle={{
+                          backgroundColor: "#1A1A2E",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                        }}
+                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                        labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
+                        formatter={(value) => [`${value}개`, "강좌 수"]}
+                      />
+                      <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={14}>
+                        {days.map((entry, index) => {
+                          const isMax = entry.count === maxDayCount;
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
+                            />
+                          );
+                        })}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
+                    차트를 불러오는 중...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 
           {/* Course Time Chart Card */}
-          <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-            <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
                 <h3 className="text-sm font-bold text-[#1A1A2E]">수업 시간별 강좌 수</h3>
               </div>
-
             </div>
 
-            <div className="w-full h-[220px]">
-              {mounted && times.length > 0 ? (
-                <ResponsiveContainer width="100%" height="100%">
-                  <BarChart
-                    data={times}
-                    layout="vertical"
-                    margin={{ top: 10, right: 20, left: 30, bottom: 5 }}
-                  >
-                    <defs>
-                      <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#2563EB" />
-                        <stop offset="100%" stopColor="#1A4FA0" />
-                      </linearGradient>
-                      <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#FCD34D" />
-                        <stop offset="100%" stopColor="#F5B700" />
-                      </linearGradient>
-                    </defs>
-                    <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
-                    <YAxis
-                      dataKey="name"
-                      type="category"
-                      stroke="#1A1A2E"
-                      fontSize={11}
-                      fontWeight={600}
-                      tickLine={false}
-                      axisLine={false}
-                      width={80}
-                    />
-                    <Tooltip
-                      cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
-                      contentStyle={{
-                        backgroundColor: "#1A1A2E",
-                        border: "none",
-                        borderRadius: "8px",
-                        padding: "8px 12px",
-                      }}
-                      itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
-                      labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
-                      formatter={(value) => [`${value}개`, "강좌 수"]}
-                    />
-                    <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={14}>
-                      {times.map((entry, index) => {
-                        const isMax = entry.count === maxTimeCount;
-                        return (
-                          <Cell
-                            key={`cell-${index}`}
-                            fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
-                          />
-                        );
-                      })}
-                    </Bar>
-                  </BarChart>
-                </ResponsiveContainer>
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
-                  차트를 불러오는 중...
-                </div>
-              )}
+            <div className="card-content">
+              <div className="w-full h-[220px]">
+                {mounted && times.length > 0 ? (
+                  <ResponsiveContainer width="100%" height="100%">
+                    <BarChart
+                      data={times}
+                      layout="vertical"
+                      margin={{ top: 10, right: 20, left: 30, bottom: 5 }}
+                    >
+                      <defs>
+                        <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#2563EB" />
+                          <stop offset="100%" stopColor="#1A4FA0" />
+                        </linearGradient>
+                        <linearGradient id="barMaxGradient" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor="#FCD34D" />
+                          <stop offset="100%" stopColor="#F5B700" />
+                        </linearGradient>
+                      </defs>
+                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <YAxis
+                        dataKey="name"
+                        type="category"
+                        stroke="#1A1A2E"
+                        fontSize={11}
+                        fontWeight={600}
+                        tickLine={false}
+                        axisLine={false}
+                        width={80}
+                      />
+                      <Tooltip
+                        cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
+                        contentStyle={{
+                          backgroundColor: "#1A1A2E",
+                          border: "none",
+                          borderRadius: "8px",
+                          padding: "8px 12px",
+                        }}
+                        itemStyle={{ color: "#FFFFFF", fontSize: "11px", fontWeight: "600" }}
+                        labelStyle={{ color: "rgba(255, 255, 255, 0.6)", fontSize: "10px", marginBottom: "4px" }}
+                        formatter={(value) => [`${value}개`, "강좌 수"]}
+                      />
+                      <Bar dataKey="count" radius={[0, 4, 4, 0]} barSize={14}>
+                        {times.map((entry, index) => {
+                          const isMax = entry.count === maxTimeCount;
+                          return (
+                            <Cell
+                              key={`cell-${index}`}
+                              fill={isMax ? "url(#barMaxGradient)" : "url(#barGradient)"}
+                            />
+                          );
+                        })}
+                      </Bar>
+                    </BarChart>
+                  </ResponsiveContainer>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
+                    차트를 불러오는 중...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
 
         {/* College/Graduate School Lecture Analysis Summary Table Card */}
-        <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-          <div className="flex items-center justify-between border-b border-[#E5E7EB]/50 pb-2">
+        <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+          <div className="flex items-center justify-between card-header">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
               <h3 className="text-sm font-bold text-[#1A1A2E]">대학(원)별 강좌 분석 요약</h3>
             </div>
-
           </div>
 
-          <div className="overflow-x-auto">
-            {loading ? (
-              <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                데이터를 불러오는 중...
-              </div>
-            ) : collegeSummaries.length > 0 ? (
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
-                    <th className="py-3 px-4 rounded-l-lg font-medium">순번</th>
-                    <th className="py-3 px-4 font-medium">대학명</th>
-                    <th className="py-3 px-4 text-right font-medium">강좌 수(개)</th>
-                    <th className="py-3 px-4 text-right font-medium">수강인원 합계(명)</th>
-                    <th className="py-3 px-4 text-right rounded-r-lg font-medium">평균 수강률(%)</th>
-                  </tr>
-                </thead>
-                <tbody className="text-xs divide-y divide-[#E5E7EB]/50">
-                  {collegeSummaries.map((summary, index) => {
-                    const isTopRank = index < 3;
-                    return (
-                      <tr key={summary.college} className="hover:bg-[#EEF3FB] transition-colors">
-                        <td className="py-3 px-4 font-semibold text-[#6B7280]">{index + 1}</td>
-                        <td className="py-3 px-4 font-bold text-[#1A1A2E]">{summary.college}</td>
-                        <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
-                          {formatNumber(summary.courseCount)}
-                        </td>
-                        <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
-                          {formatNumber(summary.totalStudents)}
-                        </td>
-                        <td className="py-3 px-4 text-right font-bold text-[#1A1A2E]">
-                          <div className="flex items-center justify-end gap-2">
-                            <span>{summary.avgEnrollmentRate}%</span>
-                            {isTopRank && (
-                              <span className="bg-[#FEF3C7] text-[#F5B700] text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                {index + 1}위
-                              </span>
-                            )}
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            ) : (
-              <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                대학(원)별 요약 정보가 없습니다.
-              </div>
-            )}
+          <div className="card-content">
+            <div className="overflow-x-auto">
+              {loading ? (
+                <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                  데이터를 불러오는 중...
+                </div>
+              ) : collegeSummaries.length > 0 ? (
+                <table className="w-full text-left border-collapse">
+                  <thead>
+                    <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
+                      <th className="py-3 px-4 rounded-l-lg font-medium">순번</th>
+                      <th className="py-3 px-4 font-medium">대학명</th>
+                      <th className="py-3 px-4 text-right font-medium">강좌 수(개)</th>
+                      <th className="py-3 px-4 text-right font-medium">수강인원 합계(명)</th>
+                      <th className="py-3 px-4 text-right rounded-r-lg font-medium">평균 수강률(%)</th>
+                    </tr>
+                  </thead>
+                  <tbody className="text-xs divide-y divide-[#E5E7EB]/50">
+                    {collegeSummaries.map((summary, index) => {
+                      const isTopRank = index < 3;
+                      return (
+                        <tr key={summary.college} className="hover:bg-[#EEF3FB] transition-colors">
+                          <td className="py-3 px-4 font-semibold text-[#6B7280]">{index + 1}</td>
+                          <td className="py-3 px-4 font-bold text-[#1A1A2E]">{summary.college}</td>
+                          <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
+                            {formatNumber(summary.courseCount)}
+                          </td>
+                          <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
+                            {formatNumber(summary.totalStudents)}
+                          </td>
+                          <td className="py-3 px-4 text-right font-bold text-[#1A1A2E]">
+                            <div className="flex items-center justify-end gap-2">
+                              <span>{summary.avgEnrollmentRate}%</span>
+                              {isTopRank && (
+                                <span className="bg-[#FEF3C7] text-[#F5B700] text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                  {index + 1}위
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                  대학(원)별 요약 정보가 없습니다.
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
         {/* Row 6: Detailed Course Table (full width) */}
-        <div className="bg-white p-6 rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col gap-4 transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-          <div className="flex justify-between items-center border-b border-[#E5E7EB] pb-3">
+        <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+          <div className="flex justify-between items-center card-header">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
               <h3 className="text-sm font-bold text-[#1A1A2E]">상세 강좌 정보</h3>
@@ -1263,230 +1270,232 @@ function DashboardContent() {
             </div>
           </div>
 
-          <div className="flex gap-6 items-start">
-            <div className="flex-1 min-w-0 flex flex-col gap-4">
-              <div className="overflow-x-auto">
-                {loading ? (
-                  <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                    강좌 목록을 불러오는 중...
-                  </div>
-                ) : currentCourses.length > 0 ? (
-                  <table className="w-full text-left border-collapse">
-                    <thead>
-                      <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
-                        <th className="py-3 px-4 rounded-l-lg font-medium">교과목명</th>
-                        <th className="py-3 px-4 font-medium">이수구분</th>
-                        <th className="py-3 px-4 font-medium text-center">학점</th>
-                        <th className="py-3 px-4 font-medium">담당교수</th>
-                        <th className="py-3 px-4 font-medium">시간표(교시)</th>
-                        <th className="py-3 px-4 font-medium text-right">수강 / 정원</th>
-                        <th className="py-3 px-4 rounded-r-lg font-medium text-right">수강률(%)</th>
-                      </tr>
-                    </thead>
-                    <tbody className="text-xs">
-                      {currentCourses.map((c) => {
-                        const rate = c.capacity > 0 ? Math.round((c.students / c.capacity) * 100) : 0;
-                        const isOverLimit = rate > 100;
-                        const isSelected = selectedCourse?.code === c.code;
+          <div className="card-content">
+            <div className="flex gap-6 items-start">
+              <div className="flex-1 min-w-0 flex flex-col gap-4">
+                <div className="overflow-x-auto">
+                  {loading ? (
+                    <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                      강좌 목록을 불러오는 중...
+                    </div>
+                  ) : currentCourses.length > 0 ? (
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
+                          <th className="py-3 px-4 rounded-l-lg font-medium">교과목명</th>
+                          <th className="py-3 px-4 font-medium">이수구분</th>
+                          <th className="py-3 px-4 font-medium text-center">학점</th>
+                          <th className="py-3 px-4 font-medium">담당교수</th>
+                          <th className="py-3 px-4 font-medium">시간표(교시)</th>
+                          <th className="py-3 px-4 font-medium text-right">수강 / 정원</th>
+                          <th className="py-3 px-4 rounded-r-lg font-medium text-right">수강률(%)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-xs">
+                        {currentCourses.map((c) => {
+                          const rate = c.capacity > 0 ? Math.round((c.students / c.capacity) * 100) : 0;
+                          const isOverLimit = rate > 100;
+                          const isSelected = selectedCourse?.code === c.code;
+                          return (
+                            <tr
+                              key={c.code}
+                              onClick={() => setSelectedCourse(c)}
+                              className={`hover:bg-[#EEF3FB] transition-colors cursor-pointer border-b border-[#E5E7EB]/50 last:border-b-0 ${
+                                isSelected ? "bg-[#EEF3FB]" : ""
+                              }`}
+                            >
+                              <td className="py-3.5 px-4 font-bold text-[#1A1A2E]">
+                                <div className="flex flex-col">
+                                  <span>{c.name}</span>
+                                  <span className="text-[10px] text-[#6B7280] font-normal">{c.code}</span>
+                                </div>
+                              </td>
+                              <td className="py-3.5 px-4">
+                                <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                                  c.classification === "전공필수" || c.classification === "전공선택"
+                                    ? "bg-blue-50 text-[#1A4FA0]"
+                                    : "bg-amber-50 text-amber-800"
+                                }`}>
+                                  {c.classification}
+                                </span>
+                              </td>
+                              <td className="py-3.5 px-4 text-center font-semibold text-[#1A1A2E]">{c.credits}학점</td>
+                              <td className="py-3.5 px-4 font-semibold text-[#6B7280]">{c.professor}</td>
+                              <td className="py-3.5 px-4 font-semibold text-[#6B7280] max-w-[150px] truncate" title={c.schedule}>
+                                {c.schedule}
+                              </td>
+                              <td className="py-3.5 px-4 font-bold text-[#1A1A2E] text-right">
+                                {formatNumber(c.students)} / {formatNumber(c.capacity)}
+                              </td>
+                              <td className={`py-3.5 px-4 text-right ${
+                                isOverLimit ? "font-bold text-[#1A4FA0]" : "font-semibold text-[#1A1A2E]"
+                              }`}>
+                                {rate}%
+                              </td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  ) : (
+                    <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                      개설된 강좌 정보가 없습니다.
+                    </div>
+                  )}
+                </div>
+
+                {/* Pagination controls */}
+                {!loading && totalPages > 1 && (
+                  <div className="flex items-center justify-between border-t border-[#E5E7EB] pt-4 mt-2">
+                    <div className="text-xs text-[#6B7280]">
+                      페이지 {currentPage} / {totalPages}
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentPage(prev => Math.max(prev - 1, 1));
+                        }}
+                        disabled={currentPage === 1}
+                        className="px-3 py-1.5 rounded-lg border border-[#E5E7EB] text-xs font-semibold text-[#1A1A2E] hover:bg-[#F0F2F5]/50 disabled:opacity-50 disabled:hover:bg-transparent transition-all"
+                      >
+                        이전
+                      </button>
+                      
+                      {getPageNumbers().map(page => {
+                        const isActive = page === currentPage;
                         return (
-                          <tr
-                            key={c.code}
-                            onClick={() => setSelectedCourse(c)}
-                            className={`hover:bg-[#EEF3FB] transition-colors cursor-pointer border-b border-[#E5E7EB]/50 last:border-b-0 ${
-                              isSelected ? "bg-[#EEF3FB]" : ""
+                          <button
+                            key={page}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setCurrentPage(page);
+                            }}
+                            className={`px-3 py-1.5 text-xs font-semibold transition-all ${
+                              isActive
+                                ? "bg-[#1A4FA0] text-white rounded-[6px]"
+                                : "border border-[#E5E7EB] rounded-lg text-[#1A1A2E] hover:bg-[#F0F2F5]/50"
                             }`}
                           >
-                            <td className="py-3.5 px-4 font-bold text-[#1A1A2E]">
-                              <div className="flex flex-col">
-                                <span>{c.name}</span>
-                                <span className="text-[10px] text-[#6B7280] font-normal">{c.code}</span>
-                              </div>
-                            </td>
-                            <td className="py-3.5 px-4">
-                              <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                                c.classification === "전공필수" || c.classification === "전공선택"
-                                  ? "bg-blue-50 text-[#1A4FA0]"
-                                  : "bg-amber-50 text-amber-800"
-                              }`}>
-                                {c.classification}
-                              </span>
-                            </td>
-                            <td className="py-3.5 px-4 text-center font-semibold text-[#1A1A2E]">{c.credits}학점</td>
-                            <td className="py-3.5 px-4 font-semibold text-[#6B7280]">{c.professor}</td>
-                            <td className="py-3.5 px-4 font-semibold text-[#6B7280] max-w-[150px] truncate" title={c.schedule}>
-                              {c.schedule}
-                            </td>
-                            <td className="py-3.5 px-4 font-bold text-[#1A1A2E] text-right">
-                              {formatNumber(c.students)} / {formatNumber(c.capacity)}
-                            </td>
-                            <td className={`py-3.5 px-4 text-right ${
-                              isOverLimit ? "font-bold text-[#1A4FA0]" : "font-semibold text-[#1A1A2E]"
-                            }`}>
-                              {rate}%
-                            </td>
-                          </tr>
+                            {page}
+                          </button>
                         );
                       })}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                    개설된 강좌 정보가 없습니다.
+
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setCurrentPage(prev => Math.min(prev + 1, totalPages));
+                        }}
+                        disabled={currentPage === totalPages}
+                        className="px-3 py-1.5 rounded-lg border border-[#E5E7EB] text-xs font-semibold text-[#1A1A2E] hover:bg-[#F0F2F5]/50 disabled:opacity-50 disabled:hover:bg-transparent transition-all"
+                      >
+                        다음
+                      </button>
+                    </div>
                   </div>
                 )}
               </div>
 
-              {/* Pagination controls */}
-              {!loading && totalPages > 1 && (
-                <div className="flex items-center justify-between border-t border-[#E5E7EB] pt-4 mt-2">
-                  <div className="text-xs text-[#6B7280]">
-                    페이지 {currentPage} / {totalPages}
+              {/* Right Column: Sliding Detailed Course Panel inside table container */}
+              {selectedCourse && (
+                <div className="w-[280px] bg-[#F8FAFC] border border-[#E5E7EB] rounded-[14px] p-5 flex flex-col gap-5 flex-shrink-0 animate-fadeIn transition-all duration-300">
+                  <div className="flex items-center justify-between border-b border-[#E5E7EB]/60 pb-3">
+                    <h4 className="text-sm font-bold text-[#1A1A2E] flex items-center gap-1.5">
+                      <span>📋</span> 강좌 상세 정보
+                    </h4>
+                    <button
+                      onClick={() => setSelectedCourse(null)}
+                      className="text-xs text-[#9CA3AF] hover:text-[#1A1A2E] font-semibold border border-[#E5E7EB] px-2 py-1 rounded hover:bg-white transition-all"
+                    >
+                      닫기
+                    </button>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCurrentPage(prev => Math.max(prev - 1, 1));
-                      }}
-                      disabled={currentPage === 1}
-                      className="px-3 py-1.5 rounded-lg border border-[#E5E7EB] text-xs font-semibold text-[#1A1A2E] hover:bg-[#F0F2F5]/50 disabled:opacity-50 disabled:hover:bg-transparent transition-all"
-                    >
-                      이전
-                    </button>
-                    
-                    {getPageNumbers().map(page => {
-                      const isActive = page === currentPage;
-                      return (
-                        <button
-                          key={page}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            setCurrentPage(page);
-                          }}
-                          className={`px-3 py-1.5 text-xs font-semibold transition-all ${
-                            isActive
-                              ? "bg-[#1A4FA0] text-white rounded-[6px]"
-                              : "border border-[#E5E7EB] rounded-lg text-[#1A1A2E] hover:bg-[#F0F2F5]/50"
-                          }`}
-                        >
-                          {page}
-                        </button>
-                      );
-                    })}
 
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setCurrentPage(prev => Math.min(prev + 1, totalPages));
-                      }}
-                      disabled={currentPage === totalPages}
-                      className="px-3 py-1.5 rounded-lg border border-[#E5E7EB] text-xs font-semibold text-[#1A1A2E] hover:bg-[#F0F2F5]/50 disabled:opacity-50 disabled:hover:bg-transparent transition-all"
-                    >
-                      다음
-                    </button>
+                  <div className="flex flex-col gap-1">
+                    <span className="text-[10px] text-[#6B7280] font-bold tracking-wide">{selectedCourse.code}</span>
+                    <h5 className="text-sm font-bold text-[#1A1A2E] leading-snug">{selectedCourse.name}</h5>
+                    <div className="mt-1">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
+                        selectedCourse.classification === "전공필수" || selectedCourse.classification === "전공선택"
+                          ? "bg-blue-50 text-[#1A4FA0]"
+                          : "bg-amber-50 text-amber-800"
+                      }`}>
+                        {selectedCourse.classification}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-2.5 text-xs border-y border-[#E5E7EB]/60 py-4">
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">담당교수</span>
+                      <span className="font-semibold text-[#1A1A2E]">{selectedCourse.professor}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">학점</span>
+                      <span className="font-semibold text-[#1A1A2E]">{selectedCourse.credits}학점</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">정원 / 수강</span>
+                      <span className="font-semibold text-[#1A1A2E]">
+                        {formatNumber(selectedCourse.capacity)}명 / {formatNumber(selectedCourse.students)}명
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">수강률</span>
+                      <span className="font-bold text-[#1A4FA0]">
+                        {selectedCourse.capacity > 0 ? Math.round((selectedCourse.students / selectedCourse.capacity) * 100) : 0}%
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5 mt-1">
+                      <span className="text-[#6B7280] text-[10px]">강의실</span>
+                      <span className="font-medium text-[#1A1A2E] truncate" title={selectedCourse.classroom}>
+                        {selectedCourse.classroom}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5">
+                      <span className="text-[#6B7280] text-[10px]">시간표</span>
+                      <span className="font-medium text-[#1A1A2E] text-[10px] leading-tight" title={selectedCourse.timeSchedule}>
+                        {selectedCourse.timeSchedule}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">수업방법</span>
+                      <span className="font-semibold text-[#1A1A2E]">{selectedCourse.method}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-[#6B7280]">원어강의 여부</span>
+                      <span className="font-semibold text-[#1A1A2E]">
+                        {selectedCourse.foreignLang === "Y" || selectedCourse.foreignLang === "Yes" ? "대상" : "비대상"}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Gender Mini Bar Chart */}
+                  <div className="flex flex-col gap-2">
+                    <h6 className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">수강생 성비 구성</h6>
+                    <div className="flex items-center justify-between text-[10px] text-[#6B7280] font-semibold">
+                      <span>남학생: {selectedCourse.maleStudents}명</span>
+                      <span>여학생: {selectedCourse.femaleStudents}명</span>
+                    </div>
+                    <div className="w-full h-3.5 bg-[#F0F2F5] rounded-full overflow-hidden flex shadow-inner">
+                      {/* Male Bar */}
+                      <div
+                        style={{ width: `${selectedCourse.students > 0 ? (selectedCourse.maleStudents / selectedCourse.students) * 100 : 50}%` }}
+                        className="h-full bg-gradient-to-r from-[#1A4FA0] to-[#2563EB]"
+                        title="남학생 비율"
+                      ></div>
+                      {/* Female Bar */}
+                      <div
+                        style={{ width: `${selectedCourse.students > 0 ? (selectedCourse.femaleStudents / selectedCourse.students) * 100 : 50}%` }}
+                        className="h-full bg-[#F5B700]"
+                        title="여학생 비율"
+                      ></div>
+                    </div>
                   </div>
                 </div>
               )}
             </div>
-
-            {/* Right Column: Sliding Detailed Course Panel inside table container */}
-            {selectedCourse && (
-              <div className="w-[280px] bg-[#F8FAFC] border border-[#E5E7EB] rounded-[14px] p-5 flex flex-col gap-5 flex-shrink-0 animate-fadeIn transition-all duration-300">
-                <div className="flex items-center justify-between border-b border-[#E5E7EB]/60 pb-3">
-                  <h4 className="text-sm font-bold text-[#1A1A2E] flex items-center gap-1.5">
-                    <span>📋</span> 강좌 상세 정보
-                  </h4>
-                  <button
-                    onClick={() => setSelectedCourse(null)}
-                    className="text-xs text-[#9CA3AF] hover:text-[#1A1A2E] font-semibold border border-[#E5E7EB] px-2 py-1 rounded hover:bg-white transition-all"
-                  >
-                    닫기
-                  </button>
-                </div>
-
-                <div className="flex flex-col gap-1">
-                  <span className="text-[10px] text-[#6B7280] font-bold tracking-wide">{selectedCourse.code}</span>
-                  <h5 className="text-sm font-bold text-[#1A1A2E] leading-snug">{selectedCourse.name}</h5>
-                  <div className="mt-1">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[9px] font-bold ${
-                      selectedCourse.classification === "전공필수" || selectedCourse.classification === "전공선택"
-                        ? "bg-blue-50 text-[#1A4FA0]"
-                        : "bg-amber-50 text-amber-800"
-                    }`}>
-                      {selectedCourse.classification}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="flex flex-col gap-2.5 text-xs border-y border-[#E5E7EB]/60 py-4">
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">담당교수</span>
-                    <span className="font-semibold text-[#1A1A2E]">{selectedCourse.professor}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">학점</span>
-                    <span className="font-semibold text-[#1A1A2E]">{selectedCourse.credits}학점</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">정원 / 수강</span>
-                    <span className="font-semibold text-[#1A1A2E]">
-                      {formatNumber(selectedCourse.capacity)}명 / {formatNumber(selectedCourse.students)}명
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">수강률</span>
-                    <span className="font-bold text-[#1A4FA0]">
-                      {selectedCourse.capacity > 0 ? Math.round((selectedCourse.students / selectedCourse.capacity) * 100) : 0}%
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-0.5 mt-1">
-                    <span className="text-[#6B7280] text-[10px]">강의실</span>
-                    <span className="font-medium text-[#1A1A2E] truncate" title={selectedCourse.classroom}>
-                      {selectedCourse.classroom}
-                    </span>
-                  </div>
-                  <div className="flex flex-col gap-0.5">
-                    <span className="text-[#6B7280] text-[10px]">시간표</span>
-                    <span className="font-medium text-[#1A1A2E] text-[10px] leading-tight" title={selectedCourse.timeSchedule}>
-                      {selectedCourse.timeSchedule}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">수업방법</span>
-                    <span className="font-semibold text-[#1A1A2E]">{selectedCourse.method}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="text-[#6B7280]">원어강의 여부</span>
-                    <span className="font-semibold text-[#1A1A2E]">
-                      {selectedCourse.foreignLang === "Y" || selectedCourse.foreignLang === "Yes" ? "대상" : "비대상"}
-                    </span>
-                  </div>
-                </div>
-
-                {/* Gender Mini Bar Chart */}
-                <div className="flex flex-col gap-2">
-                  <h6 className="text-[10px] font-bold text-[#6B7280] uppercase tracking-wider">수강생 성비 구성</h6>
-                  <div className="flex items-center justify-between text-[10px] text-[#6B7280] font-semibold">
-                    <span>남학생: {selectedCourse.maleStudents}명</span>
-                    <span>여학생: {selectedCourse.femaleStudents}명</span>
-                  </div>
-                  <div className="w-full h-3.5 bg-[#F0F2F5] rounded-full overflow-hidden flex shadow-inner">
-                    {/* Male Bar */}
-                    <div
-                      style={{ width: `${selectedCourse.students > 0 ? (selectedCourse.maleStudents / selectedCourse.students) * 100 : 50}%` }}
-                      className="h-full bg-gradient-to-r from-[#1A4FA0] to-[#2563EB]"
-                      title="남학생 비율"
-                    ></div>
-                    {/* Female Bar */}
-                    <div
-                      style={{ width: `${selectedCourse.students > 0 ? (selectedCourse.femaleStudents / selectedCourse.students) * 100 : 50}%` }}
-                      className="h-full bg-[#F5B700]"
-                      title="여학생 비율"
-                    ></div>
-                  </div>
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>
