@@ -24,7 +24,7 @@ function HeaderContent() {
   };
 
   return (
-    <div className="flex-1 flex items-center justify-between gap-4 transition-all duration-300">
+    <div className="flex-1 flex items-center justify-between gap-4 transition-all duration-300 h-full">
       {/* Left Area: Breadcrumb */}
       <div className="flex items-center gap-4">
         {/* Breadcrumb */}
@@ -65,7 +65,7 @@ function HeaderContent() {
         <button
           onClick={openAnalysis}
           disabled={!dashboardData}
-          className="flex items-center gap-1.5 bg-gradient-to-br from-[#1A4FA0] to-[#2563EB] hover:opacity-95 disabled:bg-gray-400 text-white text-xs font-semibold px-4 py-2 rounded-[8px] transition-all shadow-md active:scale-95"
+          className="flex items-center justify-center gap-1.5 bg-gradient-to-br from-[#1A4FA0] to-[#2563EB] hover:opacity-95 disabled:bg-gray-400 text-white text-xs font-semibold h-10 px-4 rounded-[8px] transition-all shadow-md active:scale-95"
         >
           <span>✨</span>
           <span>AI 강의 분석</span>
@@ -77,7 +77,18 @@ function HeaderContent() {
 
 export default function Header() {
   return (
-    <header className="h-14 bg-white dark:bg-[#1E293B] border-b border-[#E5E7EB] dark:border-b-[#334155] flex items-center px-6 sticky top-0 z-10 shadow-[0_1px_2px_rgba(0,0,0,0.01)] transition-all duration-300">
+    <header 
+      className="bg-white dark:bg-[#1E293B] border-b border-[#E5E7EB] dark:border-b-gray-800 sticky top-0 z-10 mb-14 transition-all duration-300"
+      style={{
+        height: "64px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        paddingLeft: "32px",
+        paddingRight: "32px",
+        flexShrink: 0,
+      }}
+    >
       <Suspense fallback={<div className="flex-1 flex justify-between items-center text-xs text-[#6B7280] dark:text-[#94A3B8]">불러오는 중...</div>}>
         <HeaderContent />
       </Suspense>

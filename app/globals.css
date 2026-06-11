@@ -99,6 +99,24 @@ body {
   font-weight: 700;
 }
 
+/* Dark mode overrides for markdown report */
+.dark .markdown-report {
+  color: #E2E8F0 !important;
+}
+.dark .markdown-report h1 {
+  color: #FFFFFF !important;
+  border-bottom-color: #334155 !important;
+}
+.dark .markdown-report h2 {
+  color: #60A5FA !important;
+}
+.dark .markdown-report h3 {
+  color: #E2E8F0 !important;
+}
+.dark .markdown-report strong {
+  color: #FFFFFF !important;
+}
+
 /* Dark theme style overrides */
 .dark body {
   background-color: #0F172A !important;
@@ -177,15 +195,31 @@ body {
 
 .card-header {
   background-color: #F9FAFB !important;
-  padding: 16px 20px !important;
+  padding: 16px 24px !important;
+  margin-bottom: 24px !important;
 }
 
 .dark .card-header {
   background-color: #243447 !important;
 }
 
+.card-header h3 {
+  font-weight: 600 !important;
+  color: #1A1A2E !important;
+}
+
+.dark .card-header h3 {
+  color: #E2E8F0 !important;
+}
+
+.card-header .flex.items-center {
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+}
+
 .card-content {
-  padding: 20px !important;
+  padding: 24px !important;
 }
 
 

@@ -29,7 +29,7 @@ export default function RootLayout({
       className={`${inter.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className={`${inter.className} min-h-screen bg-[#E8ECF2] dark:bg-[#0F172A] p-5 flex items-stretch text-[#1A1A2E] dark:text-[#F1F5F9] transition-all duration-300`}>
+      <body className={`${inter.className} h-screen overflow-hidden bg-[#E8ECF2] dark:bg-[#0F172A] p-5 flex items-stretch text-[#1A1A2E] dark:text-[#F1F5F9] transition-all duration-300`}>
         <ThemeProvider attribute="class" defaultTheme="light" enableSystem={false}>
           <AiAnalysisProvider>
             {/* Outer white card container wrapping sidebar + main */}

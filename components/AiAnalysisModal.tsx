@@ -164,18 +164,18 @@ ${currentData.times.map(t => `- ${t.name}: ${t.count}개`).join("\n")}
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/55 backdrop-blur-sm transition-all duration-300 animate-fadeIn">
-      <div className="bg-white w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col border border-[#E5E7EB] overflow-hidden transform scale-100 transition-transform duration-300 animate-scaleUp">
+      <div className="bg-white dark:bg-[#1E293B] w-full max-w-3xl h-[80vh] rounded-2xl shadow-2xl flex flex-col border border-[#E5E7EB] dark:border-slate-700 overflow-hidden transform scale-100 transition-transform duration-300 animate-scaleUp">
         {/* Modal Header */}
-        <div className="px-6 py-4 border-b border-[#E5E7EB] bg-[#F9FAFB] flex items-center justify-between">
+        <div className="px-6 py-4 border-b border-[#E5E7EB] dark:border-slate-700 bg-[#F9FAFB] dark:bg-[#1E293B] flex items-center justify-between">
           <div className="flex flex-col gap-0.5">
-            <span className="text-[10px] bg-[#1A4FA0]/10 text-[#1A4FA0] px-2.5 py-0.5 rounded-full font-bold self-start">
+            <span className="text-[10px] bg-[#1A4FA0]/10 dark:bg-blue-400/10 text-[#1A4FA0] dark:text-blue-400 px-2.5 py-0.5 rounded-full font-bold self-start">
               AI 통계 분석
             </span>
-            <h2 className="text-sm font-bold text-[#1A1A2E] mt-1.5">
+            <h2 className="text-sm font-bold text-[#1A1A2E] dark:text-white mt-1.5">
               분석 대상: {targetLabel}
             </h2>
           </div>
-          <span className="text-xs text-[#6B7280]">
+          <span className="text-xs text-[#6B7280] dark:text-slate-400">
             {new Date().toLocaleDateString("ko-KR", {
               year: "numeric",
               month: "long",
@@ -185,11 +185,11 @@ ${currentData.times.map(t => `- ${t.name}: ${t.count}개`).join("\n")}
         </div>
 
         {/* Modal Content */}
-        <div className="flex-1 p-6 overflow-y-auto min-h-0 bg-white">
+        <div className="flex-1 p-6 overflow-y-auto min-h-0 bg-white dark:bg-[#1E293B]">
           {loading ? (
             <div className="w-full h-full flex flex-col items-center justify-center gap-4 py-12">
-              <div className="w-10 h-10 border-4 border-[#1A4FA0]/20 border-t-[#1A4FA0] rounded-full animate-spin"></div>
-              <p className="text-xs font-semibold text-[#6B7280]">
+              <div className="w-10 h-10 border-4 border-[#1A4FA0]/20 border-t-[#1A4FA0] dark:border-blue-400/20 dark:border-t-blue-400 rounded-full animate-spin"></div>
+              <p className="text-xs font-semibold text-[#6B7280] dark:text-gray-400">
                 Gemini 3.1 Flash-Lite 모델이 통계를 분석 중입니다...
               </p>
             </div>
@@ -201,22 +201,48 @@ ${currentData.times.map(t => `- ${t.name}: ${t.count}개`).join("\n")}
               </p>
             </div>
           ) : reportText ? (
-            <div className="prose prose-sm max-w-none text-xs text-[#1A1A2E] leading-relaxed markdown-report">
-              <ReactMarkdown>{reportText}</ReactMarkdown>
+            <div className="prose prose-sm max-w-none text-xs text-[#1A1A2E] dark:text-gray-200 dark:prose-invert leading-relaxed markdown-report">
+              <ReactMarkdown
+                components={{
+                  h1: ({ ...props }) => (
+                    <h1 className="text-[1.35rem] font-extrabold mt-6 mb-3 text-[#1A1A2E] dark:text-white border-b-2 border-[#F0F2F5] dark:border-slate-700 pb-2" {...props} />
+                  ),
+                  h2: ({ ...props }) => (
+                    <h2 className="text-[1.1rem] font-bold mt-5 mb-2 text-[#1A4FA0] dark:text-blue-400" {...props} />
+                  ),
+                  h3: ({ ...props }) => (
+                    <h3 className="text-[0.95rem] font-bold mt-4 mb-2 text-[#1A1A2E] dark:text-white" {...props} />
+                  ),
+                  p: ({ ...props }) => (
+                    <p className="mb-3 leading-relaxed text-xs text-[#1A1A2E] dark:text-gray-200" {...props} />
+                  ),
+                  ul: ({ ...props }) => (
+                    <ul className="list-disc pl-5 mb-3 dark:text-gray-200" {...props} />
+                  ),
+                  li: ({ ...props }) => (
+                    <li className="mb-1 text-xs text-[#1A1A2E] dark:text-gray-200" {...props} />
+                  ),
+                  strong: ({ ...props }) => (
+                    <strong className="font-bold text-[#1A1A2E] dark:text-white" {...props} />
+                  ),
+                }}
+              >
+                {reportText}
+              </ReactMarkdown>
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280]">
+            <div className="w-full h-full flex items-center justify-center text-xs text-[#6B7280] dark:text-gray-400">
               분석을 시작하지 못했습니다.
             </div>
           )}
         </div>
 
         {/* Modal Footer */}
-        <div className="px-6 py-4 border-t border-[#E5E7EB] bg-[#F9FAFB] flex items-center justify-between">
+        <div className="px-6 py-4 border-t border-[#E5E7EB] dark:border-slate-700 bg-[#F9FAFB] dark:bg-[#1E293B] flex items-center justify-between">
           <button
             onClick={downloadReport}
             disabled={!reportText || loading}
-            className="flex items-center gap-1.5 bg-white border border-[#E5E7EB] hover:bg-[#F3F4F6] text-[#1A1A2E] text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-sm disabled:opacity-50 disabled:hover:bg-white active:scale-95"
+            className="flex items-center gap-1.5 bg-white dark:bg-slate-800 border border-[#E5E7EB] dark:border-slate-700 hover:bg-[#F3F4F6] dark:hover:bg-slate-700 text-[#1A1A2E] dark:text-gray-200 text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-sm disabled:opacity-50 disabled:hover:bg-white active:scale-95"
           >
             <span>📥</span>
             <span>보고서 다운로드 (.md)</span>
@@ -224,7 +250,7 @@ ${currentData.times.map(t => `- ${t.name}: ${t.count}개`).join("\n")}
 
           <button
             onClick={closeAnalysis}
-            className="bg-[#1A1A2E] hover:bg-black text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-sm active:scale-95"
+            className="bg-[#1A1A2E] dark:bg-slate-700 hover:bg-black dark:hover:bg-slate-600 text-white text-xs font-semibold px-4 py-2 rounded-lg transition-all shadow-sm active:scale-95"
           >
             닫기
           </button>

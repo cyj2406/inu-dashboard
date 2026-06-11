@@ -3,6 +3,7 @@
 import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { useTheme } from "next-themes";
 import {
   BarChart,
   Bar,
@@ -77,6 +78,11 @@ function DashboardContent() {
   const department = searchParams.get("department");
 
   const [mounted, setMounted] = useState(false);
+  const { theme } = useTheme();
+  const isDarkMode = mounted && theme === "dark";
+  const axisColor = isDarkMode ? "#CBD5E1" : "#1A1A2E";
+  const tickColor = isDarkMode ? "#94A3B8" : "#6B7280";
+
   const [stats, setStats] = useState<DashboardStats>({
     totalCourses: 0,
     totalStudents: 0,
@@ -181,7 +187,7 @@ function DashboardContent() {
           "15-18시": 0,
           "야간 18시~": 0
         };
-        const collegeMap: Record<string, { count: number; enrolledSum: number; rateSum: number; rateCount: number }> = {};
+        const summaryMap: Record<string, { count: number; enrolledSum: number; rateSum: number; rateCount: number }> = {};
 
         data.forEach((row: any) => {
           const enrolled = Number(row.수강) || 0;
@@ -240,18 +246,29 @@ function DashboardContent() {
             }
           }
 
-          // Aggregate 대학(원)
-          const collegeName = row.대학 ? row.대학.trim() : "";
-          const excludeColleges = ["", "기타", "교직", "군사학"];
-          if (collegeName && !excludeColleges.includes(collegeName)) {
-            if (!collegeMap[collegeName]) {
-              collegeMap[collegeName] = { count: 0, enrolledSum: 0, rateSum: 0, rateCount: 0 };
+          // Aggregate 대학(원) / 학과 / 이수구분 depending on selection
+          let groupKey = "";
+          if (department) {
+            groupKey = row.이수구분 || "기타";
+          } else if (college) {
+            groupKey = row.학과 || "기타";
+          } else {
+            groupKey = row.대학 ? row.대학.trim() : "";
+            const excludeColleges = ["", "기타", "교직", "군사학"];
+            if (excludeColleges.includes(groupKey)) {
+              groupKey = ""; // Skip it
             }
-            collegeMap[collegeName].count++;
-            collegeMap[collegeName].enrolledSum += enrolled;
+          }
+
+          if (groupKey) {
+            if (!summaryMap[groupKey]) {
+              summaryMap[groupKey] = { count: 0, enrolledSum: 0, rateSum: 0, rateCount: 0 };
+            }
+            summaryMap[groupKey].count++;
+            summaryMap[groupKey].enrolledSum += enrolled;
             if (capacity > 0) {
-              collegeMap[collegeName].rateSum += (enrolled / capacity) * 100;
-              collegeMap[collegeName].rateCount++;
+              summaryMap[groupKey].rateSum += (enrolled / capacity) * 100;
+              summaryMap[groupKey].rateCount++;
             }
           }
         });
@@ -299,12 +316,12 @@ function DashboardContent() {
         }));
         setTimes(timeList);
 
-        // Set college summaries
-        const summariesList: CollegeSummary[] = Object.entries(collegeMap).map(([col, item]) => ({
-          college: col,
+        // Set summaries dynamically
+        const summariesList: CollegeSummary[] = Object.entries(summaryMap).map(([key, item]) => ({
+          college: key,
           courseCount: item.count,
           totalStudents: item.enrolledSum,
-          avgEnrollmentRate: item.rateCount > 0 ? Math.round((rateSum / item.rateCount) * 10) / 10 : 0
+          avgEnrollmentRate: item.rateCount > 0 ? Math.round((item.rateSum / item.rateCount) * 10) / 10 : 0
         })).sort((a, b) => b.avgEnrollmentRate - a.avgEnrollmentRate);
         setCollegeSummaries(summariesList);
 
@@ -555,14 +572,39 @@ function DashboardContent() {
         { name: "야간 18시~", count: t4 }
       ]);
 
-      setCollegeSummaries([
-        {
-          college: selectedCollege || "인문대학",
-          courseCount: totalCourses,
-          totalStudents: totalStudents,
-          avgEnrollmentRate: Math.round(avgEnrollmentRate * 10) / 10
-        }
-      ]);
+      if (selectedDept) {
+        // Group by classification
+        setCollegeSummaries([
+          { college: "전공선택", courseCount: Math.round(totalCourses * 0.4), totalStudents: Math.round(totalStudents * 0.4), avgEnrollmentRate: Math.round((78 + (seed % 15)) * 10) / 10 },
+          { college: "전공필수", courseCount: Math.round(totalCourses * 0.25), totalStudents: Math.round(totalStudents * 0.25), avgEnrollmentRate: Math.round((82 + (seed % 12)) * 10) / 10 },
+          { college: "핵심교양", courseCount: Math.round(totalCourses * 0.2), totalStudents: Math.round(totalStudents * 0.2), avgEnrollmentRate: Math.round((88 + (seed % 10)) * 10) / 10 },
+          { college: "심화교양", courseCount: Math.round(totalCourses * 0.1), totalStudents: Math.round(totalStudents * 0.1), avgEnrollmentRate: Math.round((70 + (seed % 18)) * 10) / 10 },
+          { college: "일반선택", courseCount: Math.round(totalCourses * 0.05), totalStudents: Math.round(totalStudents * 0.05), avgEnrollmentRate: Math.round((65 + (seed % 20)) * 10) / 10 }
+        ].filter(item => item.courseCount > 0).sort((a, b) => b.avgEnrollmentRate - a.avgEnrollmentRate));
+      } else if (selectedCollege) {
+        // Group by department
+        const depts = [`${selectedCollege} 학과 1`, `${selectedCollege} 학과 2`, `${selectedCollege} 학과 3`].map((dept, idx) => {
+          const count = Math.round(totalCourses * (0.4 - idx * 0.1));
+          const students = Math.round(totalStudents * (0.45 - idx * 0.12));
+          const rate = avgEnrollmentRate - idx * 2.5;
+          return {
+            college: dept,
+            courseCount: count,
+            totalStudents: students,
+            avgEnrollmentRate: Math.round(rate * 10) / 10
+          };
+        });
+        setCollegeSummaries(depts.sort((a, b) => b.avgEnrollmentRate - a.avgEnrollmentRate));
+      } else {
+        setCollegeSummaries([
+          {
+            college: "인문대학",
+            courseCount: totalCourses,
+            totalStudents: totalStudents,
+            avgEnrollmentRate: Math.round(avgEnrollmentRate * 10) / 10
+          }
+        ]);
+      }
 
       // Generate totalCourses fallback courses
       const fallbackCoursesList: CourseRow[] = [];
@@ -762,7 +804,7 @@ function DashboardContent() {
                     <BarChart
                       data={categories}
                       layout="vertical"
-                      margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
+                      margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
                     >
                       <defs>
                         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
@@ -774,16 +816,16 @@ function DashboardContent() {
                           <stop offset="100%" stopColor="#F5B700" />
                         </linearGradient>
                       </defs>
-                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <XAxis type="number" stroke={tickColor} fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis
                         dataKey="name"
                         type="category"
-                        stroke="#1A1A2E"
+                        stroke={axisColor}
                         fontSize={11}
                         fontWeight={600}
                         tickLine={false}
                         axisLine={false}
-                        width={70}
+                        width={85}
                       />
                       <Tooltip
                         cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
@@ -835,7 +877,7 @@ function DashboardContent() {
                     <BarChart
                       data={categories}
                       layout="vertical"
-                      margin={{ top: 10, right: 30, left: 10, bottom: 5 }}
+                      margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
                     >
                       <defs>
                         <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
@@ -847,16 +889,16 @@ function DashboardContent() {
                           <stop offset="100%" stopColor="#F5B700" />
                         </linearGradient>
                       </defs>
-                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <XAxis type="number" stroke={tickColor} fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis
                         dataKey="name"
                         type="category"
-                        stroke="#1A1A2E"
+                        stroke={axisColor}
                         fontSize={11}
                         fontWeight={600}
                         tickLine={false}
                         axisLine={false}
-                        width={70}
+                        width={85}
                       />
                       <Tooltip
                         cursor={{ fill: "rgba(243, 244, 246, 0.6)" }}
@@ -918,6 +960,7 @@ function DashboardContent() {
                           outerRadius={80}
                           paddingAngle={2}
                           dataKey="value"
+                          stroke={isDarkMode ? "#1E293B" : "#FFFFFF"}
                         >
                           {methods.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
@@ -993,6 +1036,7 @@ function DashboardContent() {
                           outerRadius={80}
                           paddingAngle={2}
                           dataKey="value"
+                          stroke={isDarkMode ? "#1E293B" : "#FFFFFF"}
                         >
                           {credits.map((entry, index) => (
                             <Cell key={`cell-${index}`} fill={DONUT_COLORS[index % DONUT_COLORS.length]} />
@@ -1076,11 +1120,11 @@ function DashboardContent() {
                           <stop offset="100%" stopColor="#F5B700" />
                         </linearGradient>
                       </defs>
-                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <XAxis type="number" stroke={tickColor} fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis
                         dataKey="name"
                         type="category"
-                        stroke="#1A1A2E"
+                        stroke={axisColor}
                         fontSize={11}
                         fontWeight={600}
                         tickLine={false}
@@ -1149,11 +1193,11 @@ function DashboardContent() {
                           <stop offset="100%" stopColor="#F5B700" />
                         </linearGradient>
                       </defs>
-                      <XAxis type="number" stroke="#6B7280" fontSize={10} tickLine={false} axisLine={false} />
+                      <XAxis type="number" stroke={tickColor} fontSize={10} tickLine={false} axisLine={false} />
                       <YAxis
                         dataKey="name"
                         type="category"
-                        stroke="#1A1A2E"
+                        stroke={axisColor}
                         fontSize={11}
                         fontWeight={600}
                         tickLine={false}
@@ -1196,67 +1240,77 @@ function DashboardContent() {
         </div>
 
         {/* College/Graduate School Lecture Analysis Summary Table Card */}
-        <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
-          <div className="flex items-center justify-between card-header">
-            <div className="flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
-              <h3 className="text-sm font-bold text-[#1A1A2E]">대학(원)별 강좌 분석 요약</h3>
+        {!department && (
+          <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
+            <div className="flex items-center justify-between card-header">
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-[#1A4FA0]"></span>
+                <h3 className="text-sm font-bold text-[#1A1A2E]">
+                  {college 
+                    ? "학과별 강좌 분석 요약" 
+                    : "대학(원)별 강좌 분석 요약"}
+                </h3>
+              </div>
             </div>
-          </div>
 
-          <div className="card-content">
-            <div className="overflow-x-auto">
-              {loading ? (
-                <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                  데이터를 불러오는 중...
-                </div>
-              ) : collegeSummaries.length > 0 ? (
-                <table className="w-full text-left border-collapse">
-                  <thead>
-                    <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
-                      <th className="py-3 px-4 rounded-l-lg font-medium">순번</th>
-                      <th className="py-3 px-4 font-medium">대학명</th>
-                      <th className="py-3 px-4 text-right font-medium">강좌 수(개)</th>
-                      <th className="py-3 px-4 text-right font-medium">수강인원 합계(명)</th>
-                      <th className="py-3 px-4 text-right rounded-r-lg font-medium">평균 수강률(%)</th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-xs divide-y divide-[#E5E7EB]/50">
-                    {collegeSummaries.map((summary, index) => {
-                      const isTopRank = index < 3;
-                      return (
-                        <tr key={summary.college} className="hover:bg-[#EEF3FB] transition-colors">
-                          <td className="py-3 px-4 font-semibold text-[#6B7280]">{index + 1}</td>
-                          <td className="py-3 px-4 font-bold text-[#1A1A2E]">{summary.college}</td>
-                          <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
-                            {formatNumber(summary.courseCount)}
-                          </td>
-                          <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
-                            {formatNumber(summary.totalStudents)}
-                          </td>
-                          <td className="py-3 px-4 text-right font-bold text-[#1A1A2E]">
-                            <div className="flex items-center justify-end gap-2">
-                              <span>{summary.avgEnrollmentRate}%</span>
-                              {isTopRank && (
-                                <span className="bg-[#FEF3C7] text-[#F5B700] text-[10px] font-bold px-1.5 py-0.5 rounded">
-                                  {index + 1}위
-                                </span>
-                              )}
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              ) : (
-                <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
-                  대학(원)별 요약 정보가 없습니다.
-                </div>
-              )}
+            <div className="card-content">
+              <div className="overflow-x-auto">
+                {loading ? (
+                  <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                    데이터를 불러오는 중...
+                  </div>
+                ) : collegeSummaries.length > 0 ? (
+                  <table className="w-full text-left border-collapse">
+                    <thead>
+                      <tr className="bg-[#F9FAFB] text-[12px] font-medium text-[#6B7280]">
+                        <th className="py-3 px-4 rounded-l-lg font-medium">순번</th>
+                        <th className="py-3 px-4 font-medium">
+                          {college 
+                            ? "학과명" 
+                            : "대학명"}
+                        </th>
+                        <th className="py-3 px-4 text-right font-medium">강좌 수(개)</th>
+                        <th className="py-3 px-4 text-right font-medium">수강인원 합계(명)</th>
+                        <th className="py-3 px-4 text-right rounded-r-lg font-medium">평균 수강률(%)</th>
+                      </tr>
+                    </thead>
+                    <tbody className="text-xs divide-y divide-[#E5E7EB]/50">
+                      {collegeSummaries.map((summary, index) => {
+                        const isTopRank = index < 3;
+                        return (
+                          <tr key={summary.college} className="hover:bg-[#EEF3FB] transition-colors">
+                            <td className="py-3 px-4 font-semibold text-[#6B7280]">{index + 1}</td>
+                            <td className="py-3 px-4 font-bold text-[#1A1A2E]">{summary.college}</td>
+                            <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
+                              {formatNumber(summary.courseCount)}
+                            </td>
+                            <td className="py-3 px-4 text-right font-semibold text-[#6B7280]">
+                              {formatNumber(summary.totalStudents)}
+                            </td>
+                            <td className="py-3 px-4 text-right font-bold text-[#1A1A2E]">
+                              <div className="flex items-center justify-end gap-2">
+                                <span>{summary.avgEnrollmentRate}%</span>
+                                {isTopRank && (
+                                  <span className="bg-[#FEF3C7] text-[#F5B700] text-[10px] font-bold px-1.5 py-0.5 rounded">
+                                    {index + 1}위
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="py-12 flex items-center justify-center text-xs text-[#6B7280]">
+                    대학(원)별 요약 정보가 없습니다.
+                  </div>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Row 6: Detailed Course Table (full width) */}
         <div className="bg-white rounded-[14px] border border-[#E5E7EB] shadow-[0_1px_3px_rgba(26,79,160,0.06),0_4px_16px_rgba(26,79,160,0.08)] flex flex-col card-container transition-all duration-200 hover:-translate-y-[2px] hover:shadow-[0_4px_12px_rgba(26,79,160,0.12),0_12px_32px_rgba(26,79,160,0.16)]">
