@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -8,8 +10,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-inter), Pretendard, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -20,7 +21,153 @@
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
 }
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleUp {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s ease-out forwards;
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Custom scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #D1D5DB;
+}
+
+/* Markdown styling inside modal */
+.markdown-report h1 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+  color: #1A1A2E;
+  border-bottom: 2px solid #F0F2F5;
+  padding-bottom: 0.5rem;
+}
+.markdown-report h2 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  color: #1A4FA0;
+}
+.markdown-report h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  color: #1A1A2E;
+}
+.markdown-report p {
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+.markdown-report ul {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.markdown-report li {
+  margin-bottom: 0.35rem;
+}
+.markdown-report strong {
+  color: #1A1A2E;
+  font-weight: 700;
+}
+
+/* Dark theme style overrides */
+.dark body {
+  background-color: #0F172A !important;
+  color: #F1F5F9 !important;
+}
+
+.dark .bg-white {
+  background-color: #1E293B !important;
+}
+
+.dark .text-\[\#1A1A2E\] {
+  color: #F1F5F9 !important;
+}
+
+.dark .text-\[\#6B7280\] {
+  color: #94A3B8 !important;
+}
+
+.dark *,
+.dark *::before,
+.dark *::after {
+  border-color: #334155 !important;
+}
+
+/* Ensure left active menu indicators remain highlighted in blue */
+.dark .border-l-\[\#1A4FA0\],
+.dark .dark\:border-\[\#60A5FA\] {
+  border-left-color: #60A5FA !important;
+}
+
+
+.dark .bg-\[\#F9FAFB\] {
+  background-color: #1E293B !important;
+}
+
+.dark .hover\:bg-\[\#EEF3FB\]:hover {
+  background-color: rgba(26, 79, 160, 0.2) !important;
+}
+
+.dark tr.bg-\[\#EEF3FB\] {
+  background-color: rgba(26, 79, 160, 0.2) !important;
+}
+
+.dark .bg-\[\#EEF3FB\] {
+  background-color: rgba(26, 79, 160, 0.3) !important;
+}
+
+.dark .bg-\[\#F8FAFC\] {
+  background-color: #0F172A !important;
+}
+
+.dark .bg-\[\#F4F5F7\] {
+  background-color: #0F172A !important;
+}
+
+/* Warning Banner in dark mode */
+.dark .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.1) !important;
+  border-color: rgba(245, 158, 11, 0.2) !important;
+  color: #FBBF24 !important;
+}
+
+/* General button states */
+.dark .hover\:bg-\[\#F0F2F5\]\/50:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.dark .disabled\:hover\:bg-transparent:disabled:hover {
+  background-color: transparent !important;
+}
+
+
